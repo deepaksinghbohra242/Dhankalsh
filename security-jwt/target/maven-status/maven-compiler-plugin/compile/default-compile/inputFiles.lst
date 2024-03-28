@@ -1,0 +1,13 @@
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\controller\AuthController.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\config\JwtAuthenticationFilter.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\user\Role.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\controller\dto\AuthenticationResponse.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\controller\dto\AuthenticationRequest.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\user\User.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\DemoController.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\SecurityJwtApplication.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\controller\dto\RegisterRequest.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\service\AuthenticationService.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\config\SecurityConfiguration.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\utils\JwtService.java
+C:\Users\91962\Desktop\tga\security-jwt\src\main\java\tga\security\jwt\repo\UserRepository.java

@@ -1,0 +1,13 @@
+tga\security\jwt\controller\dto\AuthenticationRequest.class
+tga\security\jwt\repo\UserRepository.class
+tga\security\jwt\controller\AuthController.class
+tga\security\jwt\utils\JwtService.class
+tga\security\jwt\config\SecurityConfiguration.class
+tga\security\jwt\config\JwtAuthenticationFilter.class
+tga\security\jwt\SecurityJwtApplication.class
+tga\security\jwt\user\User.class
+tga\security\jwt\service\AuthenticationService.class
+tga\security\jwt\DemoController.class
+tga\security\jwt\controller\dto\AuthenticationResponse.class
+tga\security\jwt\user\Role.class
+tga\security\jwt\controller\dto\RegisterRequest.class
