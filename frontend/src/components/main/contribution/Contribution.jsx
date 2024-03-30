@@ -1,53 +1,118 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addContributionAction } from "../../../redux/slices/contributionSlice"; 
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserAction } from "../../../redux/slices/memberSlice";
+import {
+  addContributionAction,
+  fetchAllContributionAction,
+} from "../../../redux/slices/contributionSlice";
+
+const monthNames = [
+  "JANUARY",
+  "FEBRUARY",
+  "MARCH",
+  "APRIL",
+  "MAY",
+  "JUNE",
+  "JULY",
+  "AUGUST",
+  "SEPTEMBER",
+  "OCTOBER",
+  "NOVEMBER",
+  "DECEMBER",
+];
 
 function Contribution() {
   const dispatch = useDispatch();
-
-  const [members, setMembers] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", contributions: [100, 200, 0, 300, 250, 200, 150, 300, 0, 200, 150, 300] },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", contributions: [200, 300, 250, 0, 350, 300, 0, 400, 350, 300, 250, 400] },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", contributions: [150, 250, 0, 350, 300, 250, 0, 350, 300, 250, 0, 350] },
-  ]);
-
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [amount, setAmount] = useState('');
+  const [contributionDetails, setContributionDetails] = useState([]);
+  const user = useSelector((state) => state?.member?.memberAuth);
+  const [addContribution, setAddContribution] = useState({
+    userId: user.id, // Assuming user.id exists and contains the current user's ID
+    year: new Date().getFullYear(),
+    month: monthNames[new Date().getMonth()],
+    amount: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "month") {
+      setAddContribution({
+        ...addContribution,
+        month: monthNames[value - 1],
+      });
+    } else {
+      setAddContribution({
+        ...addContribution,
+        [name]: value,
+      });
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchAllContributionAction(selectedYear));
+  }, [dispatch, selectedYear]);
+
+  const contributions =
+    useSelector((state) => state?.contribution?.contributions) || [];
+
+  useEffect(() => {
+    const fetchContributorNames = async () => {
+      const details = [];
+      for (const d of contributions) {
+        const user = await dispatch(fetchUserAction(d.userId));
+        details.push({
+          userId: d.userId,
+          name: user.payload.fullName,
+        });
+      }
+      setContributionDetails(details);
+    };
+    fetchContributorNames();
+  }, [contributions, dispatch]);
 
   const handleYearChange = (e) => {
     setSelectedYear(parseInt(e.target.value));
   };
 
-  const handleMonthChange = (e) => {
-    setSelectedMonth(parseInt(e.target.value));
-  };
-
-  const handleAmountChange = (e) => {
-    setAmount(e.target.value);
-  };
-
   const handleAddContribution = () => {
-     
-    dispatch(addContributionAction({ userId: 404, month: selectedMonth, year: selectedYear, amount: amount }));
+    const { userId, month, year, amount } = addContribution;
+    dispatch(
+      addContributionAction({
+        userId: userId,
+        month: month.toUpperCase(), // Convert month to uppercase
+        year: parseInt(year), // Parse year to integer
+        amount: parseInt(amount), // Parse amount to integer
+      })
+    );
+    // Reset the addContribution state after adding the contribution
+    setAddContribution({
+      ...addContribution,
+      year: "",
+      month: "",
+      amount: "",
+    });
   };
 
-  const handleSearch = () => {
-    // Logic to handle search
-    console.log("Searching...");
-  };
-
-  const filteredContributions = members.map((member) => {
+  const filteredContributions = contributions.map((member) => {
+    const memberDetails = contributionDetails.find(
+      (detail) => detail.userId === member.userId
+    );
+    const name = memberDetails ? memberDetails.name : "";
     return {
       ...member,
-      contributions: member.contributions.filter((_, index) => new Date(selectedYear, index).getFullYear() === selectedYear)
+      name: name,
+      contributions: member.contributions.filter(
+        (_, index) =>
+          new Date(selectedYear, index).getFullYear() === selectedYear
+      ),
     };
   });
+
+  const handleSearch = () => {};
 
   return (
     <div className="text-gray-900 bg-gray-200">
       <div className="p-4 flex justify-center">
-        <h1 className="text-3xl">Community Name Contribution</h1>
+        <h1 className="text-3xl">{user?.communityName} Contribution</h1>
       </div>
       {/* Search Bar */}
       <div className="px-3 py-4">
@@ -73,39 +138,58 @@ function Contribution() {
               onChange={handleYearChange}
               className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
             >
-              {[...Array(5)].map((_, index) => (
-                <option key={index} value={selectedYear - index}>{selectedYear - index}</option>
-              ))}
+              {Array.from({ length: 10 }, (_, index) => {
+                const year = new Date().getFullYear() - index;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
             </select>
           </div>
         </div>
       </div>
       {/* Add Contribution Card */}
       <div className="p-4 bg-white shadow-md rounded mb-1">
-        <h2 className="text-lg flex justify-center font-semibold mb-2">Add Contribution</h2>
+        <h2 className="text-lg flex justify-center font-semibold mb-2">
+          Add Contribution
+        </h2>
         <div className="flex gap-3 justify-center items-center">
           <select
-            value={selectedMonth}
-            onChange={handleMonthChange}
+            name="month"
+            value={addContribution.month.toUpperCase}
+            onChange={handleChange}
             className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
           >
             {[...Array(12)].map((_, index) => (
-              <option key={index + 1} value={index + 1}>{new Date(0, index).toLocaleString('default', { month: 'long' })}</option>
+              <option key={index + 1} value={index + 1}>
+                {new Date(0, index).toLocaleString("default", {
+                  month: "long",
+                })}
+              </option>
             ))}
           </select>
           <select
-            value={selectedYear}
-            onChange={handleYearChange}
+            name="year"
+            value={addContribution.year}
+            onChange={handleChange}
             className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
           >
-            {[...Array(5)].map((_, index) => (
-              <option key={index} value={selectedYear - index}>{selectedYear - index}</option>
-            ))}
+            {Array.from({ length: 10 }).map((_, index) => {
+              const year = new Date().getFullYear() - index;
+              return (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              );
+            })}
           </select>
           <input
+            name="amount"
             type="number"
-            value={amount}
-            onChange={handleAmountChange}
+            value={addContribution.amount}
+            onChange={handleChange}
             placeholder="Amount"
             className="w-32 bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
           />
@@ -117,7 +201,7 @@ function Contribution() {
           </button>
         </div>
       </div>
-      
+
       {/* Member List */}
       <div className="overflow-x-auto">
         <table className="w-full text-md bg-white shadow-md rounded mb-4">
@@ -126,21 +210,30 @@ function Contribution() {
               <th className="text-left p-3 px-5">Name</th>
               {[...Array(12)].map((_, index) => (
                 <th key={index} className="text-left p-3 px-5">
-                  {new Date(0, index).toLocaleString('default', { month: 'long' })}
+                  {new Date(0, index).toLocaleString("default", {
+                    month: "long",
+                  })}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {filteredContributions.map((member) => (
-              <tr key={member.id} className="border-b hover:bg-orange-100 bg-gray-100">
+              <tr
+                key={member.id}
+                className="border-b hover:bg-orange-100 bg-gray-100"
+              >
                 <td className="p-3 px-5">{member.name}</td>
                 {member.contributions.map((contribution, index) => (
                   <td
                     key={index}
-                    className={`p-3 px-5 ${contribution === 0 ? 'text-red-500' : ''}`}
+                    className={`p-3 border px-5 ${
+                      contribution === 0
+                        ? "text-red-500"
+                        : "bg-green-300 font-semibold"
+                    }`}
                   >
-                    {contribution === 0 ? 'Not contributed' : contribution}
+                    {contribution === 0 ? "Not contributed" : contribution}
                   </td>
                 ))}
               </tr>

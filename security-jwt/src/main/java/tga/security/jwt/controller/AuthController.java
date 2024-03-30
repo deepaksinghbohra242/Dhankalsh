@@ -1,5 +1,6 @@
 package tga.security.jwt.controller;
 
+import jakarta.websocket.server.PathParam;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,6 @@ public record AuthController(AuthenticationService authenticationService) {
     public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authenticationService.registerAdmin(request));
     }
-
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(authenticationService.login(request));
@@ -39,5 +34,9 @@ public record AuthController(AuthenticationService authenticationService) {
         return ResponseEntity.ok(authenticationService.getUsersByCommunityName());
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<RegisterResponse> getUserByUserId(@PathVariable("userId") Integer userId){
+        return ResponseEntity.ok(authenticationService.getUserByUserId(userId));
+    }
 
 }

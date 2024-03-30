@@ -28,11 +28,4 @@ public record ContributionController(ContributionService contributionService) {
         return ResponseEntity.ok(contributions);
     }
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<List<Month>> getContributionsByUserIdAndYear(
-//            @PathVariable("userId") Integer userId,
-//            @RequestParam("year") Year year) {
-//        List<Month> contributions = contributionService.getContributionsByUserIdAndYear(userId,year);
-//        return ResponseEntity.ok(contributions);
-//    }
 }

@@ -1,6 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import {baseUrl} from "../../utils/BaseUrl";
+
+const resetUserAction = createAction("user/reset");
 
 export const registerUserAction = createAsyncThunk(
     "user/register",
@@ -48,7 +50,7 @@ export const loginUserAction = createAsyncThunk(
 
 export const addNewMemberAction = createAsyncThunk(
     "user/addnew",
-    async (userData, { rejectWithValue }) => {
+    async (userData, { rejectWithValue , dispatch}) => {
         const config = {
             headers: {
                 "Content-Type": "application/json"
@@ -60,6 +62,7 @@ export const addNewMemberAction = createAsyncThunk(
                 userData,
                 config
             );
+            dispatch(resetUserAction);
             return data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || error.message);
@@ -68,7 +71,7 @@ export const addNewMemberAction = createAsyncThunk(
 );
 export const fetchUsersByCommunityNameAction = createAsyncThunk(
     "user/fetchUsersByCommunityName",
-    async (_, { rejectWithValue, getState }) => {
+    async (_, { rejectWithValue, getState,dispatch }) => {
         const token = getState().member.memberAuth.token;
         const config = {
             headers: {
@@ -77,6 +80,7 @@ export const fetchUsersByCommunityNameAction = createAsyncThunk(
         };
         try {
             const { data } = await axios.get(`${baseUrl}/allusers`, config);
+            dispatch(resetUserAction);
             return data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || error.message);
@@ -84,7 +88,23 @@ export const fetchUsersByCommunityNameAction = createAsyncThunk(
     }
 );
 
-
+export const fetchUserAction = createAsyncThunk(
+    "user/fetchuser",
+    async (userId, { rejectWithValue, getState, dispatch }) => {
+        const token = getState().member.memberAuth.token;
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+        try {
+            const { data } = await axios.get(`${baseUrl}/${userId}`);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error?.response?.data || error.message);
+        }
+    }
+);
 
 export const logoutUserAction = createAsyncThunk(
     "user/logout",

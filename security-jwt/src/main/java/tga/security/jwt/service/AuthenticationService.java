@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public record AuthenticationService(UserRepository userRepository,
@@ -55,7 +56,9 @@ public record AuthenticationService(UserRepository userRepository,
                 Role.ADMIN);
         userRepository.save(user);
         final var token = JwtService.generateToken(user);
-        return new AuthenticationResponse(user.getFullName(),
+        return new AuthenticationResponse(
+                user.getId(),
+                user.getFullName(),
                 user.getCommunityName(),
                 user.getPhoneNumber(),
                 user.getAddress(),
@@ -63,22 +66,6 @@ public record AuthenticationService(UserRepository userRepository,
                 user.getRole(),
                 token);
     }
-
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
-        final var user = userRepository.findByEmail(request.email()).orElseThrow();
-        final var token = JwtService.generateToken(user);
-        return new AuthenticationResponse(user.getFullName(), user.getCommunityName(), user.getPhoneNumber(), user.getAddress(), user.getEmail(), user.getRole(), token);
-
-    }
-
-
     public AuthenticationResponse login(AuthenticationRequest request){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -91,6 +78,7 @@ public record AuthenticationService(UserRepository userRepository,
         final var token = JwtService.generateToken(user);
 
         return new AuthenticationResponse(
+                user.getId(),
                 user.getFullName(),
                 user.getCommunityName(),
                 user.getPhoneNumber(),
@@ -103,5 +91,15 @@ public record AuthenticationService(UserRepository userRepository,
     public List<User> getUsersByCommunityName() {
         String communityName = extractCommunityNameFromToken();
         return userRepository.findByCommunityName(communityName);
+    }
+
+    public RegisterResponse getUserByUserId(Integer userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return new RegisterResponse(user.getFullName(), user.getCommunityName(), user.getPhoneNumber(), user.getAddress(), user.getEmail(), user.getRole());
+        } else {
+            throw new IllegalArgumentException("User not found with userId: " + userId);
+        }
     }
 }
