@@ -18,7 +18,7 @@ const userMenu = [
 ];
 
 function Navbar() {
-  const state = useSelector((state) => state?.member?.memberAuth);
+  const state = useSelector((state) => state?.user?.userAuth);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
   const isAdmin = state?.role === 'ADMIN';

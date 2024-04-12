@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {Navigate} from "react-router-dom"
-import { loginUserAction } from "../../../redux/slices/memberSlice";
+import { loginUserAction } from "../../../redux/slices/userSlices";
 
 function Login() {
   const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUserAction } from "../../../redux/slices/memberSlice";
+import { registerUserAction } from "../../../redux/slices/userSlices";
 import { Navigate } from "react-router-dom";
 import swal from "sweetalert";
 

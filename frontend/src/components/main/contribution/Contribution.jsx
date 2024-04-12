@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserAction } from "../../../redux/slices/memberSlice";
+import { fetchUserAction } from "../../../redux/slices/userSlices";
 import {
   addContributionAction,
   fetchAllContributionAction,
@@ -25,7 +25,7 @@ function Contribution() {
   const dispatch = useDispatch();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [contributionDetails, setContributionDetails] = useState([]);
-  const user = useSelector((state) => state?.member?.memberAuth);
+  const user = useSelector((state) => state?.user?.userAuth);
   const [addContribution, setAddContribution] = useState({
     userId: user.id, // Assuming user.id exists and contains the current user's ID
     year: new Date().getFullYear(),

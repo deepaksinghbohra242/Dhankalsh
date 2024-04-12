@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUsersByCommunityNameAction } from "../../../redux/slices/memberSlice";
+import { fetchUsersByCommunityNameAction } from "../../../redux/slices/userSlices";
 
 function MemberList() {
   const dispatch = useDispatch();
@@ -9,8 +9,8 @@ function MemberList() {
     dispatch(fetchUsersByCommunityNameAction());
   }, [dispatch]);
 
-  const members = useSelector((state) => state?.member?.usersData) || [];
-  const checkAdmin = useSelector(state => state?.member?.memberAuth?.role);
+  const members = useSelector((state) => state?.user?.usersData) || [];
+  const checkAdmin = useSelector(state => state?.user?.userAuth?.role);
   const isAdmin = checkAdmin === 'ADMIN' ? true : false; 
 
   const handleEditMember = (id) => {

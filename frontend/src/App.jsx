@@ -12,6 +12,7 @@ import Notification from "./components/main/notification/Notification";
 import ProfilePage from "./components/main/profile/ProfilePage";
 import Member from "./components/main/member/Member";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import EditProfile from "./components/main/profile/EditProfile";
 
 function App() {
   return (
@@ -22,13 +23,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<CreateCommunity />} />
           <Route path="/community" element={<ProtectedRoute ><Community /></ProtectedRoute>}  />
-          <Route path="/contribution" element={<Contribution />} />
-          <Route path="/loan" element={<Loan />} />
-          <Route path="/memberlist" element={<MemberList />} />
-          <Route path="/payment" element={<Payment />}/>
-          <Route path="/notification" element={<Notification />}/>
-          <Route path="/profile" element={<ProfilePage />}/>
-          <Route path="/addnew" element={<Member />}/>
+          <Route path="/contribution" element={<ProtectedRoute><Contribution /></ProtectedRoute>} />
+          <Route path="/loan" element={<ProtectedRoute><Loan /></ProtectedRoute>} />
+          <Route path="/memberlist" element={<ProtectedRoute><MemberList /></ProtectedRoute>} />
+          <Route path="/payment" element={<ProtectedRoute><Payment /></ProtectedRoute>}/>
+          <Route path="/notification" element={<ProtectedRoute><Notification /></ProtectedRoute>}/>
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
+          <Route path="/addnew" element={<ProtectedRoute><Member /></ProtectedRoute>}/>
+          <Route path="/edit-profile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </>

@@ -48,7 +48,7 @@ export const loginUserAction = createAsyncThunk(
     }
 );
 
-export const addNewMemberAction = createAsyncThunk(
+export const addNewUserAction = createAsyncThunk(
     "user/addnew",
     async (userData, { rejectWithValue , dispatch}) => {
         const config = {
@@ -72,7 +72,7 @@ export const addNewMemberAction = createAsyncThunk(
 export const fetchUsersByCommunityNameAction = createAsyncThunk(
     "user/fetchUsersByCommunityName",
     async (_, { rejectWithValue, getState,dispatch }) => {
-        const token = getState().member.memberAuth.token;
+        const token = getState().user.userAuth.token;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -91,7 +91,7 @@ export const fetchUsersByCommunityNameAction = createAsyncThunk(
 export const fetchUserAction = createAsyncThunk(
     "user/fetchuser",
     async (userId, { rejectWithValue, getState, dispatch }) => {
-        const token = getState().member.memberAuth.token;
+        const token = getState().user.userAuth.token;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -125,7 +125,7 @@ const userLoginFromStorage = localStorage.getItem("userData")
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        memberAuth: userLoginFromStorage,
+        userAuth: userLoginFromStorage,
         loading: false,
         error: null,
     },
@@ -137,7 +137,7 @@ const userSlice = createSlice({
             })
             .addCase(registerUserAction.fulfilled, (state, action) => {
                 state.loading = false;
-                state.memberAuth = action.payload;
+                state.userAuth = action.payload;
             })
             .addCase(registerUserAction.rejected, (state, action) => {
                 state.loading = false;
@@ -151,7 +151,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUserAction.fulfilled, (state, action) => {
                 state.loading = false;
-                state.memberAuth = action.payload;
+                state.userAuth = action.payload;
             })
             .addCase(loginUserAction.rejected, (state, action) => {
                 state.loading = false;
@@ -159,15 +159,15 @@ const userSlice = createSlice({
             });
 
         builder
-            .addCase(addNewMemberAction.pending, (state, action) => {
+            .addCase(addNewUserAction.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addNewMemberAction.fulfilled, (state, action) => {
+            .addCase(addNewUserAction.fulfilled, (state, action) => {
                 state.loading = false;
-                state.memberAuth = action.payload;
+                state.userAuth = action.payload;
             })
-            .addCase(addNewMemberAction.rejected, (state, action) => {
+            .addCase(addNewUserAction.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
@@ -189,7 +189,7 @@ const userSlice = createSlice({
             .addCase(logoutUserAction.pending, (state, action) => {
             })
             .addCase(logoutUserAction.fulfilled, (state, action) => {
-                state.memberAuth = null;
+                state.userAuth = null;
             })
             .addCase(logoutUserAction.rejected, (state, action) => {
             });

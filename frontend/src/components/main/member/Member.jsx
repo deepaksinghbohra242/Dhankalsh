@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewMemberAction } from "../../../redux/slices/memberSlice";
+import { addNewUserAction } from "../../../redux/slices/userSlices";
 
 function Member() {
   const [redirect, setRedirect] = useState(false);
@@ -15,7 +15,7 @@ function Member() {
 
   const dispatch = useDispatch();
   const communityName = useSelector(
-    (state) => state?.member?.memberAuth?.communityName
+    (state) => state?.user?.userAuth?.communityName
   );
 
   // Set the communityName in formData when the component mounts
@@ -37,7 +37,7 @@ function Member() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addNewMemberAction(formData))
+    dispatch(addNewUserAction(formData))
       .unwrap()
       .then((response) => {
         setRedirect(true);

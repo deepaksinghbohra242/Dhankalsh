@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import swal from "sweetalert";
-import { logoutUserAction } from "../../../redux/slices/memberSlice";
+import { logoutUserAction } from "../../../redux/slices/userSlices";
 
 function Dropdown() {
   const dispatch = useDispatch();

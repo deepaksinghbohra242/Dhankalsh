@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { baseUrl, contributionUrl } from '../../utils/BaseUrl';
-import {fetchUserAction} from './memberSlice'
+import {fetchUserAction} from './userSlices'
 
 const resetContribution = createAction("contribution/reset");
 
