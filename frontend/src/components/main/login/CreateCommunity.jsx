@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useDispatch ,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUserAction } from "../../../redux/slices/memberSlice";
-import {Navigate} from "react-router-dom"
-import swal from 'sweetalert';
+import { Navigate } from "react-router-dom";
+import swal from "sweetalert";
 
 function CreateCommunity() {
   const dispatch = useDispatch();
@@ -12,9 +12,7 @@ function CreateCommunity() {
   const [formData, setFormData] = useState({
     communityName: "",
     fullName: "",
-    phoneNumber: "",
     email: "",
-    address: "",
     password: "",
     confirmPassword: "",
   });
@@ -41,7 +39,7 @@ function CreateCommunity() {
         });
       });
   };
-  if(redirect) return <Navigate to={"/loan"} />
+  if (redirect) return <Navigate to={"/loan"} />;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -49,8 +47,8 @@ function CreateCommunity() {
       [name]: value,
     });
   };
-  if(redirect){
-    return <Navigate to={"/login"} />
+  if (redirect) {
+    return <Navigate to={"/login"} />;
   }
   return (
     <>
@@ -94,18 +92,6 @@ function CreateCommunity() {
                         />
                       </div>
 
-                      <div className="md:col-span-2">
-                        <label htmlFor="phoneNumber">Phone Number</label>
-                        <input
-                          type="text"
-                          name="phoneNumber"
-                          id="phoneNumber"
-                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                          value={formData.phoneNumber}
-                          onChange={handleChange}
-                          placeholder="Enter phone number"
-                        />
-                      </div>
                       <div className="md:col-span-3">
                         <label htmlFor="email">Email</label>
                         <input
@@ -118,18 +104,7 @@ function CreateCommunity() {
                           placeholder="email@gmail.com"
                         />
                       </div>
-                      <div className="md:col-span-5">
-                        <label htmlFor="address">Address</label>
-                        <input
-                          type="text"
-                          name="address"
-                          id="address"
-                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                          value={formData.address}
-                          onChange={handleChange}
-                          placeholder="Enter address"
-                        />
-                      </div>
+
                       <div className="md:col-span-5">
                         <label htmlFor="password">Password</label>
                         <input

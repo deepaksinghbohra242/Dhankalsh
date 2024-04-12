@@ -4,13 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUsersByCommunityNameAction } from "../../../redux/slices/memberSlice";
 
 function MemberList() {
-  const isAdmin = true;
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUsersByCommunityNameAction());
   }, [dispatch]);
 
   const members = useSelector((state) => state?.member?.usersData) || [];
+  const checkAdmin = useSelector(state => state?.member?.memberAuth?.role);
+  const isAdmin = checkAdmin === 'ADMIN' ? true : false; 
 
   const handleEditMember = (id) => {
     console.log("Editing member with id:", id);

@@ -1,37 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 function ProfilePage() {
-  const userData = [
-    { label: "Name", value: "someone" },
-    {
-      label: "Father's Name",
-      value: "some",
-    },
-    {
-      label: "Occupation",
-      value: "sarkari naukri",
-    },
-    {
-      label: "Phone No.",
-      value: "9192834423",
-    },
-    {
-      label: "Age",
-      value: "44",
-    },
-    {
-      label: "Address",
-      value: "saomwesdrfewnn",
-    },
-    {
-      label: "ID",
-      value: "fds0if-03423",
-    },
-    {
-      label: "KYC Status",
-      value: "verified",
-    },
-  ];
+  const userData = useSelector(state => state?.member?.memberAuth);
+
+  // Filter out the token key from userData
+  const filteredUserData = Object.entries(userData)
+    .filter(([key]) => key !== 'token')
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
 
   return (
     <div className="flex justify-center py-8">
@@ -51,11 +30,11 @@ function ProfilePage() {
         </div>
         {/* User Details */}
         <div className="w-2/3 p-4">
-          {userData.map((item, index) => (
+          {Object.entries(filteredUserData).map(([key, value], index) => (
             <div key={index} className="mb-4">
-              <div className="block text-gray-700 text-sm font-bold mb-2">
-                {item.label}
-              <p className="text-gray-800 font-medium">{item.value}</p>
+              <div className="block text-gray-700 capitalize text-sm font-bold mb-2">
+                {key}
+                <p className="text-gray-800 font-medium">{value}</p>
               </div>
             </div>
           ))}

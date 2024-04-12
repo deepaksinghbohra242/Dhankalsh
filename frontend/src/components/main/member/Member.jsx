@@ -1,75 +1,71 @@
 import React, { useState } from "react";
-import {Navigate} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewMemberAction } from "../../../redux/slices/memberSlice";
 
 function Member() {
-      const [redirect , setRedirect] = useState(false);
-      const [formData, setFormData] = useState({
-        fullName: "",
-        email: "",
-        password: "",
-        phoneNumber: "",
-        address: "",
-        role: "USER", // default to user
-        communityName: "",
+  const [redirect, setRedirect] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    role: "USER", // default to user
+    communityName: "",
+  });
+
+  const dispatch = useDispatch();
+  const communityName = useSelector(
+    (state) => state?.member?.memberAuth?.communityName
+  );
+
+  // Set the communityName in formData when the component mounts
+  useState(() => {
+    if (communityName !== undefined) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        communityName: communityName,
+      }));
+    }
+  }, [communityName]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addNewMemberAction(formData))
+      .unwrap()
+      .then((response) => {
+        setRedirect(true);
+        swal({
+          title: "Success!",
+          text: "New Member Added Successfully",
+          icon: "success",
+          button: "Ok!",
+        });
+      })
+      .catch((error) => {
+        swal({
+          title: "Try Again!",
+          text: error.message || "Failed to add user",
+          icon: "error",
+          button: "Ok!",
+        });
       });
+    setFormData({
+      fullName: "",
+      email: "",
+      password: "",
+      role: "USER",
+      communityName: "",
+    });
+  };
 
-      const dispatch = useDispatch();
-      const communityName = useSelector(
-        (state) => state?.member?.memberAuth?.communityName
-      );
-
-      // Set the communityName in formData when the component mounts
-      useState(() => {
-        if (communityName !== undefined) {
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            communityName: communityName,
-          }));
-        }
-      }, [communityName]);
-
-      const handleChange = (e) => {
-        setFormData({
-          ...formData,
-          [e.target.name]: e.target.value,
-        });
-      };
-
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(addNewMemberAction(formData))
-          .unwrap()
-          .then((response) => {
-            setRedirect(true);
-            swal({
-              title: "Success!",
-              text: "New Member Added Successfully",
-              icon: "success",
-              button: "Ok!",
-            });
-          })
-          .catch((error) => {
-            swal({
-              title: "Try Again!",
-              text: error.message || "Failed to add user",
-              icon: "error",
-              button: "Ok!",
-            });
-          });
-        setFormData({
-          fullName: "",
-          email: "",
-          password: "",
-          phoneNumber: "",
-          address: "",
-          role: "USER",
-          communityName: "",
-        });
-      };
-
-      if(redirect) return <Navigate to={"/memberlist"} />
+  if (redirect) return <Navigate to={"/memberlist"} />;
 
   return (
     <div className="h-screen p-6 bg-gray-100 flex justify-center">
@@ -111,19 +107,6 @@ function Member() {
                       />
                     </div>
 
-                    <div className="md:col-span-2">
-                      <label htmlFor="phoneNumber">Phone Number</label>
-                      <input
-                        type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder="Enter phone number"
-                        required
-                      />
-                    </div>
                     <div className="md:col-span-3">
                       <label htmlFor="email">Email</label>
                       <input
@@ -137,19 +120,7 @@ function Member() {
                         required
                       />
                     </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="address">Address</label>
-                      <input
-                        type="text"
-                        name="address"
-                        id="address"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.address}
-                        onChange={handleChange}
-                        placeholder="Enter address"
-                        required
-                      />
-                    </div>
+
                     <div className="md:col-span-5">
                       <label htmlFor="password">password</label>
                       <input
