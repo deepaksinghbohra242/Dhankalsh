@@ -17,9 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue
     private Integer id;
     private String fullName;
-    private String address;
     private String email;
-    private String phoneNumber;
     private String communityName;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -27,13 +25,11 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Integer id, String fullName, String communityName ,String phoneNumber, String address, String email, String passwd, Role role) {
+    public User(Integer id, String fullName, String communityName , String email, String passwd, Role role) {
         this.id = id;
         this.fullName = fullName;
-        this.address = address;
         this.email = email;
         this.communityName = communityName;
-        this.phoneNumber = phoneNumber;
         this.password = passwd;
         this.role = role;
     }
@@ -49,17 +45,8 @@ public class User implements UserDetails {
     public String getFullName() {
         return fullName;
     }
-
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getEmail() {
@@ -68,14 +55,6 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public String getCommunityName() {

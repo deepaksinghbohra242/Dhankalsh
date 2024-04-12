@@ -30,8 +30,6 @@ public record AuthenticationService(UserRepository userRepository,
         final var user = new User(null,
                 request.fullName(),
                 request.communityName(),
-                request.phoneNumber(),
-                request.address(),
                 request.email(),
                 passwordEncoder.encode(request.password()),
                 request.role());
@@ -49,8 +47,6 @@ public record AuthenticationService(UserRepository userRepository,
         final var user = new User(null,
                 request.fullName(),
                 request.communityName(),
-                request.phoneNumber(),
-                request.address(),
                 request.email(),
                 passwordEncoder.encode(request.password()),
                 Role.ADMIN);
@@ -60,8 +56,6 @@ public record AuthenticationService(UserRepository userRepository,
                 user.getId(),
                 user.getFullName(),
                 user.getCommunityName(),
-                user.getPhoneNumber(),
-                user.getAddress(),
                 user.getEmail(),
                 user.getRole(),
                 token);
@@ -81,8 +75,6 @@ public record AuthenticationService(UserRepository userRepository,
                 user.getId(),
                 user.getFullName(),
                 user.getCommunityName(),
-                user.getPhoneNumber(),
-                user.getAddress(),
                 user.getEmail(),
                 user.getRole(),
                 token);
@@ -97,7 +89,7 @@ public record AuthenticationService(UserRepository userRepository,
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return new RegisterResponse(user.getFullName(), user.getCommunityName(), user.getPhoneNumber(), user.getAddress(), user.getEmail(), user.getRole());
+            return new RegisterResponse(user.getFullName(), user.getCommunityName(), user.getEmail(), user.getRole());
         } else {
             throw new IllegalArgumentException("User not found with userId: " + userId);
         }

@@ -11,6 +11,7 @@ import CreateCommunity from "./components/main/login/CreateCommunity";
 import Notification from "./components/main/notification/Notification";
 import ProfilePage from "./components/main/profile/ProfilePage";
 import Member from "./components/main/member/Member";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<CreateCommunity />} />
-          <Route path="/community" element={<Community />}  />
+          <Route path="/community" element={<ProtectedRoute ><Community /></ProtectedRoute>}  />
           <Route path="/contribution" element={<Contribution />} />
           <Route path="/loan" element={<Loan />} />
           <Route path="/memberlist" element={<MemberList />} />

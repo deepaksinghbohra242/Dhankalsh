@@ -127,7 +127,7 @@ const userSlice = createSlice({
     initialState: {
         memberAuth: userLoginFromStorage,
         loading: false,
-        error: null
+        error: null,
     },
     extraReducers: builder => {
         builder
