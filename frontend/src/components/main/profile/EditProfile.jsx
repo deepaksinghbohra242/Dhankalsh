@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-
+import {Navigate } from 'react-router-dom'
+import { addNewMemberAction} from "../../../redux/slices/memberSlices"
 function EditProfile() {
   const dispatch = useDispatch();
+  const [redirect , setRedirect] = useState(false);
   const userData = useSelector((state) => state?.user?.userAuth);
-  console.log(userData);
   const [formData, setFormData] = useState({
     fullName: userData?.fullName,
     id: userData?.id,
@@ -29,21 +29,27 @@ function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
-    setFormData({
-      userName: "",
-      id: "",
-      fatherName: "",
-      motherName: "",
-      profession: "",
-      address: "",
-      phoneNumber: "",
-      dob: "",
-      startDate: "",
-      communityName: "",
-    });
+    dispatch(addNewMemberAction(formData))
+      .unwrap()
+      .then((response) => {
+        setRedirect(true);
+        swal({
+          title: "Success!",
+          text: "New Member Added Successfully",
+          icon: "success",
+          button: "Ok!",
+        });
+      })
+      .catch((error) => {
+        swal({
+          title: "Try Again!",
+          text: error.message || "Failed to add user",
+          icon: "error",
+          button: "Ok!",
+        });
+      });    
   };
-
+  if(redirect) return <Navigate to={'/profile'} />
   return (
     <>
       <section className="bg-white dark:bg-gray-900 ">
@@ -68,7 +74,8 @@ function EditProfile() {
                   onChange={handleChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   placeholder="Enter your fullName"
-                  required
+                  required 
+                  disabled
                 />
               </div>
               <div className="sm:col-span-1">
@@ -87,6 +94,7 @@ function EditProfile() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   placeholder="Enter your ID"
                   required
+                  disabled
                 />
               </div>
               <div className="sm:col-span-1">
@@ -123,6 +131,7 @@ function EditProfile() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   placeholder="Enter your Community Name"
                   required
+                  disabled
                 />
               </div>
               <div className="sm:col-span-1">
@@ -187,7 +196,7 @@ function EditProfile() {
                   Phone Number
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="phoneNumber"
                   id="phoneNumber"
                   value={formData.phoneNumber}

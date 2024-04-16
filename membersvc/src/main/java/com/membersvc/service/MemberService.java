@@ -45,15 +45,35 @@ public class MemberService {
     }
 
     public String updateMember(Member updatedMember) {
-        try{
-            boolean existingMember = memberRepository.existsByUserId(updatedMember.getUserId());
-            if(!existingMember) return "Member not exists";
-            memberRepository.save(updatedMember);
-            return "Member updated";
-        }catch (Exception e){
+        try {
+            // Check if the member exists
+            Optional<Member> existingMemberOptional = memberRepository.findByUserId(updatedMember.getUserId());
+
+            if (existingMemberOptional.isPresent()) {
+                // Get the existing member object
+                Member existingMember = existingMemberOptional.get();
+
+                // Update fields of the existing member with new values
+                existingMember.setFullName(updatedMember.getFullName());
+                existingMember.setFatherName(updatedMember.getFatherName());
+                existingMember.setMotherName(updatedMember.getMotherName());
+                existingMember.setPhoneNumber(updatedMember.getPhoneNumber());
+                existingMember.setAddress(updatedMember.getAddress());
+                existingMember.setProfession(updatedMember.getProfession());
+                existingMember.setDob(updatedMember.getDob());
+                existingMember.setStartDate(updatedMember.getStartDate());
+                // Save the updated member to the database
+                memberRepository.save(existingMember);
+
+                return "Member updated";
+            } else {
+                return "Member does not exist";
+            }
+        } catch (Exception e) {
             return "Member not updated";
         }
     }
+
 
     public void deleteMember(Integer id) {
         memberRepository.deleteById(id);
