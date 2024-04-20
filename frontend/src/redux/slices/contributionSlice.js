@@ -18,16 +18,17 @@ export const addContributionAction = createAsyncThunk(
 );
 
 export const fetchAllContributionAction = createAsyncThunk(
-    'contribution/fetchAll',
-    async (year, { rejectWithValue }) => {
-      try {
-        const { data } = await axios.get(`${contributionUrl}/getall?year=${year}`);
-        return data;
-      } catch (error) {
-        return rejectWithValue(error.message);
-      }
+  'contribution/fetchAll',
+  async (year, { rejectWithValue, getState }) => {
+    const community = getState().user.userAuth.communityName;
+    try {
+      const { data } = await axios.get(`${contributionUrl}/getall?year=${year}&community=${community}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
-  );
+  }
+);
 
 const contributionSlice = createSlice({
   name: 'contribution',

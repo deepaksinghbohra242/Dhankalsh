@@ -16,7 +16,7 @@ public class Contribution {
     private Integer contributionId;
     private Integer userId;
     private Month contributionMonth;
-
+    private String communityName;
     private Year year;
     private Date contributionDate;
     private Integer amount;
@@ -25,10 +25,11 @@ public class Contribution {
     public Contribution(){
 
     }
-    public Contribution(Integer contributionId, Integer userId, Month contributionMonth, Date contributionDate, Year year, Integer amount, Payment isPaymentDone) {
+    public Contribution(Integer contributionId, Integer userId, Month contributionMonth, String communityName, Date contributionDate, Year year, Integer amount, Payment isPaymentDone) {
         this.contributionId = contributionId;
         this.userId = userId;
         this.contributionMonth = contributionMonth;
+        this.communityName = communityName;
         this.contributionDate = contributionDate;
         this.year = year;
         this.amount = amount;
@@ -47,6 +48,14 @@ public class Contribution {
     }
     public Month getContributionMonth() {
         return contributionMonth;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
     }
 
     public void setContributionMonth(Month contributionMonth) {

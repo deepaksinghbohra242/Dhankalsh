@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUserAction } from "../../../redux/slices/userSlices";
 import { Navigate } from "react-router-dom";
 import swal from "sweetalert";
+import { addNewMemberAction } from "../../../redux/slices/memberSlices";
 
 function CreateCommunity() {
   const dispatch = useDispatch();
@@ -21,13 +22,15 @@ function CreateCommunity() {
     e.preventDefault();
     dispatch(registerUserAction(formData))
       .unwrap()
-      .then(() => {
-        setRedirect(true);
-        swal({
-          title: "Success!",
-          text: "Account Created Successfully",
-          icon: "success",
-          button: "Ok!",
+      .then((data) => {
+        dispatch(addNewMemberAction(data)).then(() => {
+          setRedirect(true);
+          swal({
+            title: "Success!",
+            text: "Account Created Successfully",
+            icon: "success",
+            button: "Ok!",
+          });
         });
       })
       .catch((error) => {

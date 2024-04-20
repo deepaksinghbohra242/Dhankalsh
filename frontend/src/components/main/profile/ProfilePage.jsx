@@ -1,9 +1,37 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { getMemberAction } from "../../../redux/slices/memberSlices";
 
 function ProfilePage() {
   const userData = useSelector((state) => state?.user?.userAuth);
+  const [memberData, setMemberData] = useState();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMemberAction(userData?.id)).then((response) => {
+      setMemberData(response?.payload);
+    });
+  }, [dispatch, userData?.id]);
+
+  // Extract only the date part from dob and startDate
+  const dobDate = memberData?.dob ? new Date(memberData.dob) : null;
+  const startDateDate = memberData?.startDate
+    ? new Date(memberData.startDate)
+    : null;
+
+  // Filter out keys from memberData
+  const filteredMemberData = memberData
+    ? Object.fromEntries(
+        Object.entries(memberData).filter(
+          ([key]) =>
+            key !== "id" &&
+            key !== "userId" &&
+            key !== "fullName" &&
+            key !== "communityName"
+        )
+      )
+    : null;
 
   // Filter out the token key from userData
   const filteredUserData = Object.entries(userData)
@@ -16,12 +44,12 @@ function ProfilePage() {
   return (
     <>
       <div className="flex justify-end">
-      <Link
-        to="/edit-profile"
-        className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
-      >
-        Edit Details
-      </Link>
+        <Link
+          to="/edit-profile"
+          className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
+        >
+          Edit Details
+        </Link>
       </div>
       <div className="flex justify-center py-8">
         <div className="w-full max-w-4xl flex mx-auto bg-white shadow-md rounded-lg overflow-hidden">
@@ -40,6 +68,7 @@ function ProfilePage() {
           </div>
           {/* User Details */}
           <div className="w-2/3 p-4">
+            {/* Render filteredUserData */}
             {Object.entries(filteredUserData).map(([key, value], index) => (
               <div key={index} className="mb-4">
                 <div className="block text-gray-700 capitalize text-sm font-bold mb-2">
@@ -48,6 +77,23 @@ function ProfilePage() {
                 </div>
               </div>
             ))}
+            {/* Render filteredMemberData */}
+            {filteredMemberData &&
+              Object.entries(filteredMemberData).map(([key, value], index) => (
+                <div key={index} className="mb-4">
+                  <div className="block text-gray-700 capitalize text-sm font-bold mb-2">
+                    {key}
+                    {/* Displaying date part only */}
+                    <p className="text-gray-800 font-medium">
+                      {key === "dob"
+                        ? dobDate.toLocaleDateString()
+                        : key === "startDate"
+                        ? startDateDate.toLocaleDateString()
+                        : value}
+                    </p>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </div>

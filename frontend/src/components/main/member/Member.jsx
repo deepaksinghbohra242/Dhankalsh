@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewUserAction } from "../../../redux/slices/userSlices";
+import { addNewMemberAction } from "../../../redux/slices/memberSlices";
 
 function Member() {
   const [redirect, setRedirect] = useState(false);
@@ -39,13 +40,16 @@ function Member() {
     e.preventDefault();
     dispatch(addNewUserAction(formData))
       .unwrap()
-      .then((response) => {
-        setRedirect(true);
-        swal({
-          title: "Success!",
-          text: "New Member Added Successfully",
-          icon: "success",
-          button: "Ok!",
+      .then((data) => {
+        console.log(data);
+        dispatch(addNewMemberAction(data)).then(() => {
+          setRedirect(true);
+          swal({
+            title: "Success!",
+            text: "New Member Added Successfully",
+            icon: "success",
+            button: "Ok!",
+          });
         });
       })
       .catch((error) => {

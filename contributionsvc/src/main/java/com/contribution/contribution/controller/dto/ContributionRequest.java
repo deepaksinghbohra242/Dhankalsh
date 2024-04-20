@@ -5,5 +5,5 @@ import com.contribution.contribution.model.Payment;
 import java.time.Month;
 import java.time.Year;
 
-public record ContributionRequest(Integer userId, Month month , Year year , Integer amount , Payment isPaymentDone) {
+public record ContributionRequest(Integer userId, Month month , Year year , Integer amount , Payment isPaymentDone ,String communityName) {
 }

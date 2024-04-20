@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.time.Month;
 import java.time.Year;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public record ContributionService(ContributionRepository contributionRepository) {
@@ -29,6 +28,7 @@ public record ContributionService(ContributionRepository contributionRepository)
                         null,
                         request.userId(),
                         contributionMonth,
+                        request.communityName(),
                         currentDate,
                         request.year(),
                         request.amount(),
@@ -43,8 +43,8 @@ public record ContributionService(ContributionRepository contributionRepository)
             }
         }
 
-    public List<ContributionResponse> getAllContributions(Year year) {
-        List<Contribution> allContributions = contributionRepository.findByYear(year);
+    public List<ContributionResponse> getAllContributions(Year year , String communityName) {
+        List<Contribution> allContributions = contributionRepository.findByYearAndCommunityName(year , communityName);
         // Map to store user IDs and their contribution months for the given year
         Map<Integer, List<Integer>> contributionMap = new HashMap<>();
 

@@ -17,8 +17,8 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public Optional<Member> getMemberById(Integer id) {
-        return memberRepository.findById(id);
+    public Optional<Member> getMemberById(Integer userId) {
+        return memberRepository.findByUserId(userId);
     }
 
     public String addMember(Member member) {

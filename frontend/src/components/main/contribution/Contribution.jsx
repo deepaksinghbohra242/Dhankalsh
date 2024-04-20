@@ -5,6 +5,7 @@ import {
   addContributionAction,
   fetchAllContributionAction,
 } from "../../../redux/slices/contributionSlice";
+import swal from "sweetalert";
 
 const monthNames = [
   "JANUARY",
@@ -27,10 +28,11 @@ function Contribution() {
   const [contributionDetails, setContributionDetails] = useState([]);
   const user = useSelector((state) => state?.user?.userAuth);
   const [addContribution, setAddContribution] = useState({
-    userId: user.id, // Assuming user.id exists and contains the current user's ID
+    userId: user.id,
     year: new Date().getFullYear(),
     month: monthNames[new Date().getMonth()],
     amount: "",
+    communityName : user.communityName
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,35 +56,50 @@ function Contribution() {
   const contributions =
     useSelector((state) => state?.contribution?.contributions) || [];
 
-  useEffect(() => {
-    const fetchContributorNames = async () => {
-      const details = [];
-      for (const d of contributions) {
-        const user = await dispatch(fetchUserAction(d.userId));
-        details.push({
-          userId: d.userId,
-          name: user.payload.fullName,
-        });
-      }
-      setContributionDetails(details);
-    };
-    fetchContributorNames();
-  }, [contributions, dispatch]);
+    useEffect(() => {
+      const fetchContributorNames = async () => {
+        const details = [];
+        for (const d of contributions) {
+          const user = await dispatch(fetchUserAction(d.userId));
+          details.push({
+            userId: d.userId,
+            name: user.payload.fullName,
+          });
+        }
+        setContributionDetails(details);
+      };
+      fetchContributorNames();
+    }, [contributions]);
 
   const handleYearChange = (e) => {
     setSelectedYear(parseInt(e.target.value));
   };
 
   const handleAddContribution = () => {
-    const { userId, month, year, amount } = addContribution;
+    const { userId, month, year, amount , communityName } = addContribution;
     dispatch(
       addContributionAction({
         userId: userId,
-        month: month.toUpperCase(), // Convert month to uppercase
-        year: parseInt(year), // Parse year to integer
+        month: month, 
+        year: parseInt(year), 
         amount: parseInt(amount), // Parse amount to integer
+        communityName : communityName,
+      })).then(()=>{
+        swal({
+          title: "Success!",
+          text: "Contribution added Successfully",
+          icon: "success",
+          button: "Ok!",
+        });
       })
-    );
+      .catch(()=>{
+        swal({
+          title: "Try Again!",
+          text: "Contribution not added",
+          icon: "Try again ",
+          button: "Ok!",
+        });
+      });
     // Reset the addContribution state after adding the contribution
     setAddContribution({
       ...addContribution,
@@ -158,18 +175,17 @@ function Contribution() {
         <div className="flex gap-3 justify-center items-center">
           <select
             name="month"
-            value={addContribution.month.toUpperCase}
+            value={addContribution.month} 
             onChange={handleChange}
             className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
           >
             {[...Array(12)].map((_, index) => (
-              <option key={index + 1} value={index + 1}>
-                {new Date(0, index).toLocaleString("default", {
-                  month: "long",
-                })}
+              <option key={index + 1} value={monthNames[index]}>
+                {monthNames[index]}
               </option>
             ))}
           </select>
+
           <select
             name="year"
             value={addContribution.year}
@@ -218,9 +234,9 @@ function Contribution() {
             </tr>
           </thead>
           <tbody>
-            {filteredContributions.map((member) => (
+            {filteredContributions.map((member , index) => (
               <tr
-                key={member.id}
+                key={index}
                 className="border-b hover:bg-orange-100 bg-gray-100"
               >
                 <td className="p-3 px-5">{member.name}</td>

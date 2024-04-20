@@ -18,7 +18,13 @@ public class MembersvcApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:5173");
+				registry.addMapping("/**")
+						.allowedOrigins("http://localhost:5173") // You can configure specific origins here instead of "*" if needed
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*")
+						.exposedHeaders("Authorization")
+						.allowCredentials(true)
+						.maxAge(3600);
 			}
 		};
 	}

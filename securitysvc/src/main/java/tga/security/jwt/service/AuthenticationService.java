@@ -37,7 +37,11 @@ public record AuthenticationService(UserRepository userRepository,
         if (savedUser == null) {
             throw new RuntimeException("Failed to save user");
         }
-        return new MemberResponse("Completed");
+        return new MemberResponse(user.getId(),
+                user.getFullName(),
+                user.getCommunityName(),
+                user.getEmail(),
+                user.getRole());
     }
 
     public AuthenticationResponse registerAdmin(RegisterRequest request) {

@@ -62,7 +62,6 @@ export const addNewUserAction = createAsyncThunk(
                 userData,
                 config
             );
-            dispatch(resetUserAction);
             return data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || error.message);
@@ -80,7 +79,6 @@ export const fetchUsersByCommunityNameAction = createAsyncThunk(
         };
         try {
             const { data } = await axios.get(`${baseUrl}/allusers`, config);
-            dispatch(resetUserAction);
             return data;
         } catch (error) {
             return rejectWithValue(error?.response?.data || error.message);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {Navigate } from 'react-router-dom'
-import { addNewMemberAction} from "../../../redux/slices/memberSlices"
+import { updateMemberAction } from "../../../redux/slices/memberSlices"
 function EditProfile() {
   const dispatch = useDispatch();
   const [redirect , setRedirect] = useState(false);
@@ -29,13 +29,13 @@ function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addNewMemberAction(formData))
+    dispatch(updateMemberAction(formData))
       .unwrap()
       .then((response) => {
         setRedirect(true);
         swal({
           title: "Success!",
-          text: "New Member Added Successfully",
+          text: "Member Updated Successfully",
           icon: "success",
           button: "Ok!",
         });
@@ -43,7 +43,7 @@ function EditProfile() {
       .catch((error) => {
         swal({
           title: "Try Again!",
-          text: error.message || "Failed to add user",
+          text: error.message || "Failed to update user",
           icon: "error",
           button: "Ok!",
         });

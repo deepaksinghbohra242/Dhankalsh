@@ -20,9 +20,9 @@ public class MemberController {
         return memberService.getAllMembers();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Member> getMemberById(@PathVariable Integer id) {
-        Optional<Member> member = memberService.getMemberById(id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<Member> getMemberById(@PathVariable Integer userId) {
+        Optional<Member> member = memberService.getMemberById(userId);
         return member.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

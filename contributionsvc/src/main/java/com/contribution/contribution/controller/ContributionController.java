@@ -23,8 +23,10 @@ public record ContributionController(ContributionService contributionService) {
     }
 
     @GetMapping("/getall")
-    public ResponseEntity<List<ContributionResponse>> getAllContributions(@RequestParam("year") Year year) {
-        List<ContributionResponse> contributions = contributionService.getAllContributions(year);
+    public ResponseEntity<List<ContributionResponse>> getAllContributions(
+            @RequestParam("year") Year year,
+            @RequestParam("community") String communityName) {
+        List<ContributionResponse> contributions = contributionService.getAllContributions(year , communityName);
         return ResponseEntity.ok(contributions);
     }
 

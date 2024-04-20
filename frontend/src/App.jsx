@@ -13,6 +13,7 @@ import ProfilePage from "./components/main/profile/ProfilePage";
 import Member from "./components/main/member/Member";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import EditProfile from "./components/main/profile/EditProfile";
+import Home from "./components/main/home/Home";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<CreateCommunity />} />
           <Route path="/community" element={<ProtectedRoute ><Community /></ProtectedRoute>}  />

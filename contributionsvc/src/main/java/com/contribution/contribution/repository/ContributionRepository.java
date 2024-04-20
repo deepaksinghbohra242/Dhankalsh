@@ -12,5 +12,5 @@ public interface ContributionRepository extends JpaRepository<Contribution , Int
 
     List<Contribution> findByYear(Year year);
 
-    List<Contribution> findByUserIdAndYear(int userId, Year year);
+    List<Contribution> findByYearAndCommunityName(Year year , String communityName);
 }
