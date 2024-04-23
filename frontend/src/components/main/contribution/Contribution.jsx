@@ -30,16 +30,19 @@ function Contribution() {
   const [addContribution, setAddContribution] = useState({
     userId: user.id,
     year: new Date().getFullYear(),
+    monthIndex: new Date().getMonth(),
     month: monthNames[new Date().getMonth()],
     amount: "",
-    communityName : user.communityName
+    communityName: user.communityName,
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "month") {
+    if (name === "monthIndex") {
+      const monthIndex = parseInt(value);
       setAddContribution({
         ...addContribution,
-        month: monthNames[value - 1],
+        monthIndex: monthIndex,
+        month: monthNames[monthIndex],
       });
     } else {
       setAddContribution({
@@ -56,35 +59,37 @@ function Contribution() {
   const contributions =
     useSelector((state) => state?.contribution?.contributions) || [];
 
-    useEffect(() => {
-      const fetchContributorNames = async () => {
-        const details = [];
-        for (const d of contributions) {
-          const user = await dispatch(fetchUserAction(d.userId));
-          details.push({
-            userId: d.userId,
-            name: user.payload.fullName,
-          });
-        }
-        setContributionDetails(details);
-      };
-      fetchContributorNames();
-    }, [contributions]);
+  useEffect(() => {
+    const fetchContributorNames = async () => {
+      const details = [];
+      for (const d of contributions) {
+        const user = await dispatch(fetchUserAction(d.userId));
+        details.push({
+          userId: d.userId,
+          name: user.payload.fullName,
+        });
+      }
+      setContributionDetails(details);
+    };
+    fetchContributorNames();
+  }, [contributions]);
 
   const handleYearChange = (e) => {
     setSelectedYear(parseInt(e.target.value));
   };
 
   const handleAddContribution = () => {
-    const { userId, month, year, amount , communityName } = addContribution;
+    const { userId, month, year, amount, communityName } = addContribution;
     dispatch(
       addContributionAction({
         userId: userId,
-        month: month, 
-        year: parseInt(year), 
-        amount: parseInt(amount), // Parse amount to integer
-        communityName : communityName,
-      })).then(()=>{
+        month: month,
+        year: parseInt(year),
+        amount: parseInt(amount),
+        communityName: communityName,
+      })
+    )
+      .then((data) => {
         swal({
           title: "Success!",
           text: "Contribution added Successfully",
@@ -92,7 +97,7 @@ function Contribution() {
           button: "Ok!",
         });
       })
-      .catch(()=>{
+      .catch(() => {
         swal({
           title: "Try Again!",
           text: "Contribution not added",
@@ -100,11 +105,11 @@ function Contribution() {
           button: "Ok!",
         });
       });
-    // Reset the addContribution state after adding the contribution
     setAddContribution({
       ...addContribution,
-      year: "",
-      month: "",
+      year: new Date().getFullYear(),
+      monthIndex: new Date().getMonth(),
+      month: monthNames[new Date().getMonth()],
       amount: "",
     });
   };
@@ -174,18 +179,17 @@ function Contribution() {
         </h2>
         <div className="flex gap-3 justify-center items-center">
           <select
-            name="month"
-            value={addContribution.month} 
+            name="monthIndex"
+            value={addContribution.monthIndex}
             onChange={handleChange}
             className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
           >
-            {[...Array(12)].map((_, index) => (
-              <option key={index + 1} value={monthNames[index]}>
-                {monthNames[index]}
+            {monthNames.map((month, index) => (
+              <option key={index} value={index}>
+                {month}
               </option>
             ))}
           </select>
-
           <select
             name="year"
             value={addContribution.year}
@@ -234,7 +238,7 @@ function Contribution() {
             </tr>
           </thead>
           <tbody>
-            {filteredContributions.map((member , index) => (
+            {filteredContributions.map((member, index) => (
               <tr
                 key={index}
                 className="border-b hover:bg-orange-100 bg-gray-100"

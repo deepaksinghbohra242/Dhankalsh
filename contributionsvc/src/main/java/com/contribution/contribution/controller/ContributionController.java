@@ -13,15 +13,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/cont")
 public record ContributionController(ContributionService contributionService) {
-    @GetMapping("/contribute")
-    public String test(){
-        return "ok";
-    }
     @PostMapping("/add")
     public ResponseEntity<String> registerContribution (@RequestBody ContributionRequest contributionRequest){
         return ResponseEntity.ok(contributionService.addContribution(contributionRequest));
     }
-
     @GetMapping("/getall")
     public ResponseEntity<List<ContributionResponse>> getAllContributions(
             @RequestParam("year") Year year,

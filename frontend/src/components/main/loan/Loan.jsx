@@ -1,29 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Loan() {
-  const [loans, setLoans] = useState([
-    {
-      id: 1,
-      memberName: "John Doe",
-      amount: 5000,
-      date: "2023-10-12",
-      deadline: "2023-12-31",
-    },
-    {
-      id: 2,
-      memberName: "Jane Smith",
-      amount: 8000,
-      date: "2023-11-05",
-      deadline: "2023-12-15",
-    },
-    {
-      id: 3,
-      memberName: "Alice Johnson",
-      amount: 3000,
-      date: "2023-12-20",
-      deadline: "2024-01-31",
-    },
-  ]);
+  const [loans, setLoans] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [newLoan, setNewLoan] = useState({
     memberName: "",
@@ -31,6 +10,23 @@ function Loan() {
     date: "",
     deadline: "",
   });
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const fetchLoans = async () => {
+    try {
+      const response = await axios.get("/api/v1/loan/getAll");
+      if (Array.isArray(response.data)) {
+        setLoans(response.data);
+      } else {
+        console.error("Invalid response format for loans:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching loans:", error);
+    }
+  };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -44,27 +40,18 @@ function Loan() {
     }));
   };
 
-  const handleAddLoan = () => {
-    if (
-      newLoan.memberName &&
-      newLoan.amount &&
-      newLoan.date &&
-      newLoan.deadline
-    ) {
-      const id = loans.length + 1;
-      setLoans((prevLoans) => [
-        ...prevLoans,
-        {
-          id,
-          ...newLoan,
-        },
-      ]);
+  const handleAddLoan = async () => {
+    try {
+      const response = await axios.post("/api/v1/loan/add", newLoan);
+      setLoans([...loans, response.data]);
       setNewLoan({
         memberName: "",
         amount: "",
         date: "",
         deadline: "",
       });
+    } catch (error) {
+      console.error("Error adding loan:", error);
     }
   };
 
