@@ -18,7 +18,7 @@ public record ContributionService(ContributionRepository contributionRepository)
                 Month contributionMonth = Month.valueOf(String.valueOf(request.month()));
 
                 boolean contributionExists = contributionRepository.existsByUserIdAndContributionMonthAndYear(
-                        request.userId(), contributionMonth, request.year());
+                        request.userId(), contributionMonth, Year.of(request.year()));
 
                 if (contributionExists) {
                     throw new Error("already exists");
@@ -30,7 +30,7 @@ public record ContributionService(ContributionRepository contributionRepository)
                         contributionMonth,
                         request.communityName(),
                         currentDate,
-                        request.year(),
+                        Year.of(request.year()),
                         request.amount(),
                         Payment.PROGRESS
                 );
