@@ -12,20 +12,24 @@ public class Loan {
     private Integer id;
     private Integer userId;
     private String communityName;
+    private String borrower;
+    private String purpose;
     private Double amount;
-    private Date dateOfTaking ;
+    private Date dateOfTaking;
     private Date deadline;
 
-    public Loan(Integer id, Integer userId, String communityName, Double amount, Date dateOfTaking, Date deadline) {
+    public Loan() {
+    }
+
+    public Loan(Integer id, Integer userId, String communityName, String borrower, String purpose, Double amount, Date dateOfTaking, Date deadline) {
         this.id = id;
         this.userId = userId;
         this.communityName = communityName;
+        this.borrower = borrower;
+        this.purpose = purpose;
         this.amount = amount;
         this.dateOfTaking = dateOfTaking;
         this.deadline = deadline;
-    }
-
-    public Loan() {
     }
 
     public Integer getId() {
@@ -50,6 +54,22 @@ public class Loan {
 
     public void setCommunityName(String communityName) {
         this.communityName = communityName;
+    }
+
+    public String getBorrower() {
+        return borrower;
+    }
+
+    public void setBorrower(String borrower) {
+        this.borrower = borrower;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     public Double getAmount() {

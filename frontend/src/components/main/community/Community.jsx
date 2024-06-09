@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTotalContribution, fetchTotalUser } from '../../../redux/slices/userSlices';
+import { getTotalLoanAmount } from "../../../redux/slices/loanSlice";
 
 function Community() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.userAuth);
   const communityName = user?.communityName;
-  
-  // Local state for total contribution
+    // Local state for total contribution
   const [totalContribution, setTotalContribution] = useState(null);
   const [totalMember , setTotalMember] = useState(null);
+  const [totalLoan , setTotalLoan] = useState(null)
 
   useEffect(() => {
     if (communityName) {
@@ -20,14 +21,17 @@ function Community() {
       dispatch(fetchTotalUser(communityName)).then((response)=>{
         setTotalMember(response.payload);
       })
+      dispatch(getTotalLoanAmount(communityName)).then((response) => {
+        setTotalLoan(response.payload);
+      })
     }
     
   }, [dispatch, communityName]);
 
   const communityData = [
     { name: "Community ID", value: user?.id },
-    { name: "Available Amount", value: totalContribution },
-    { name: "Loan Given", value: 3000 },
+    { name: "Available Amount", value: totalContribution - totalLoan },
+    { name: "Loan Given", value: totalLoan },
     { name: "Total Members", value: totalMember },
   ];
 

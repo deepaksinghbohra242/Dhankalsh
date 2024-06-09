@@ -8,13 +8,12 @@ const adminMenu = [
   { path: "/memberlist", value: "Member List" },
   { path: "/contribution", value: "Contribution" },
   { path: "/loan", value: "Loan" },
-  { path: "/notification", value: "Notifications" },
 ];
 const userMenu = [
   { path: "/community", value: "Community" },
   { path: "/memberlist", value: "Member List" },
   { path: "/contribution", value: "Contribution" },
-  { path: "/notification", value: "Notifications" },
+  { path: "/loan", value: "Loan" },
 ];
 
 function Navbar() {

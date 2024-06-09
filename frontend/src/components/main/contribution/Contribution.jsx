@@ -1,3 +1,4 @@
+// Contribution.jsx
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserAction } from "../../../redux/slices/userSlices";
@@ -24,9 +25,13 @@ const monthNames = [
 
 function Contribution() {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state?.user?.userAuth);
+  const contributions =
+    useSelector((state) => state?.contribution?.contributions) || [];
+
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [contributionDetails, setContributionDetails] = useState([]);
-  const user = useSelector((state) => state?.user?.userAuth);
+  const [searchTerm, setSearchTerm] = useState("");
   const [addContribution, setAddContribution] = useState({
     userId: user.id,
     year: new Date().getFullYear(),
@@ -35,6 +40,29 @@ function Contribution() {
     amount: "",
     communityName: user.communityName,
   });
+
+  // Fetch contributions for the selected year
+  useEffect(() => {
+    dispatch(fetchAllContributionAction(selectedYear));
+  }, [dispatch, selectedYear]);
+
+  // Fetch contributor names
+  useEffect(() => {
+    const fetchContributorNames = async () => {
+      const details = [];
+      for (const d of contributions) {
+        const user = await dispatch(fetchUserAction(d.userId));
+        details.push({
+          userId: d.userId,
+          name: user.payload.fullName,
+        });
+      }
+      setContributionDetails(details);
+    };
+    fetchContributorNames();
+  }, [contributions, dispatch]);
+
+  // Handle change in form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "monthIndex") {
@@ -52,32 +80,12 @@ function Contribution() {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchAllContributionAction(selectedYear));
-  }, [dispatch, selectedYear]);
-
-  const contributions =
-    useSelector((state) => state?.contribution?.contributions) || [];
-
-  useEffect(() => {
-    const fetchContributorNames = async () => {
-      const details = [];
-      for (const d of contributions) {
-        const user = await dispatch(fetchUserAction(d.userId));
-        details.push({
-          userId: d.userId,
-          name: user.payload.fullName,
-        });
-      }
-      setContributionDetails(details);
-    };
-    fetchContributorNames();
-  }, [contributions]);
-
+  // Handle year change for fetching contributions
   const handleYearChange = (e) => {
     setSelectedYear(parseInt(e.target.value));
   };
 
+  // Handle adding new contribution
   const handleAddContribution = () => {
     const { userId, month, year, amount, communityName } = addContribution;
     dispatch(
@@ -89,7 +97,7 @@ function Contribution() {
         communityName: communityName,
       })
     )
-      .then((data) => {
+      .then(() => {
         swal({
           title: "Success!",
           text: "Contribution added Successfully",
@@ -101,10 +109,12 @@ function Contribution() {
         swal({
           title: "Try Again!",
           text: "Contribution not added",
-          icon: "Try again ",
+          icon: "Try again",
           button: "Ok!",
         });
       });
+
+    // Reset form after submission
     setAddContribution({
       ...addContribution,
       year: new Date().getFullYear(),
@@ -114,41 +124,52 @@ function Contribution() {
     });
   };
 
-  const filteredContributions = contributions.map((member) => {
-    const memberDetails = contributionDetails.find(
-      (detail) => detail.userId === member.userId
-    );
-    const name = memberDetails ? memberDetails.name : "";
-    return {
-      ...member,
-      name: name,
-      contributions: member.contributions.filter(
-        (_, index) =>
-          new Date(selectedYear, index).getFullYear() === selectedYear
-      ),
-    };
-  });
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
-  const handleSearch = () => {};
+  // Filtered contributions based on search term
+  const filteredContributions = contributions
+    .map((member) => {
+      const memberDetails = contributionDetails.find(
+        (detail) => detail.userId === member.userId
+      );
+      const name = memberDetails ? memberDetails.name : "";
+      return {
+        ...member,
+        name: name,
+        contributions: member.contributions.filter(
+          (_, index) =>
+            new Date(selectedYear, index).getFullYear() === selectedYear
+        ),
+      };
+    })
+    .filter((member) =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   return (
     <div className="text-gray-900 bg-gray-200">
       <div className="p-4 flex justify-center">
         <h1 className="text-3xl">{user?.communityName} Contribution</h1>
       </div>
+
       {/* Search Bar */}
       <div className="px-3 py-4">
         <div className="flex justify-center gap-3 items-center w-full">
           <div className="w-1/3">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search by name..."
               className="w-full bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4"
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
           </div>
           <div>
             <button
-              onClick={handleSearch}
+              onClick={() => {}}
               className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Search
@@ -172,6 +193,7 @@ function Contribution() {
           </div>
         </div>
       </div>
+
       {/* Add Contribution Card */}
       <div className="p-4 bg-white shadow-md rounded mb-1">
         <h2 className="text-lg flex justify-center font-semibold mb-2">
@@ -244,9 +266,9 @@ function Contribution() {
                 className="border-b hover:bg-orange-100 bg-gray-100"
               >
                 <td className="p-3 px-5">{member.name}</td>
-                {member.contributions.map((contribution, index) => (
+                {member.contributions.map((contribution, idx) => (
                   <td
-                    key={index}
+                    key={idx}
                     className={`p-3 border px-5 ${
                       contribution === 0
                         ? "text-red-500"

@@ -15,6 +15,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import EditProfile from "./components/main/profile/EditProfile";
 import Home from "./components/main/home/Home";
 import UserProfile from "./components/main/profile/UserProfile";
+import RegisterLoan from "./components/main/loan/RegisterLoan";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
           <Route path="/register" element={<CreateCommunity />} />
           <Route path="/community" element={<ProtectedRoute ><Community /></ProtectedRoute>}  />
           <Route path="/contribution" element={<ProtectedRoute><Contribution /></ProtectedRoute>} />
-          <Route path="/loan" element={<ProtectedRoute><Loan /></ProtectedRoute>} />
+          <Route path="/loan" element={<Loan />} />
+          <Route path="/register-loan" element={<ProtectedRoute><RegisterLoan /></ProtectedRoute>} />
           <Route path="/memberlist" element={<ProtectedRoute><MemberList /></ProtectedRoute>} />
           <Route path="/payment" element={<ProtectedRoute><Payment /></ProtectedRoute>}/>
           <Route path="/notification" element={<ProtectedRoute><Notification /></ProtectedRoute>}/>
