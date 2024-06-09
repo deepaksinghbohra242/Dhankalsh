@@ -66,10 +66,10 @@ public record ContributionService(ContributionRepository contributionRepository)
         return responseList;
     }
 
-
-//    public List<Month> getContributionsByUserIdAndYear(Integer userId, Year year) {
-//        return contributionRepository.findByUserIdAndYear(userId, year);
-//    }
+    public Integer getTotalContribution(String communityName) {
+        List<Contribution> contributions = contributionRepository.findByCommunityName(communityName);
+        return contributions.stream().mapToInt(Contribution::getAmount).sum();
+    }
 
 }
 

@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getMemberAction } from "../../../redux/slices/memberSlices";
 
 function ProfilePage() {
+  const { id: profileId } = useParams(); // Get the profile ID from the URL
   const userData = useSelector((state) => state?.user?.userAuth);
-  const [memberData, setMemberData] = useState();
+  const [memberData, setMemberData] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getMemberAction(userData?.id)).then((response) => {
-      setMemberData(response?.payload);
-    });
-  }, [dispatch, userData?.id]);
+    if (profileId) {
+      console.log("Fetching member data for ID:", profileId); // Debugging log
+      dispatch(getMemberAction(profileId)).then((response) => {
+        console.log("Member data fetched:", response?.payload); // Debugging log
+        setMemberData(response?.payload);
+      });
+    }
+  }, [dispatch, profileId]);
+
+  const isCurrentUserProfile = userData?.id === profileId;
 
   // Extract only the date part from dob and startDate
   const dobDate = memberData?.dob ? new Date(memberData.dob) : null;
-  const startDateDate = memberData?.startDate
-    ? new Date(memberData.startDate)
-    : null;
+  const startDateDate = memberData?.startDate ? new Date(memberData.startDate) : null;
 
   // Filter out keys from memberData
   const filteredMemberData = memberData
@@ -43,14 +48,16 @@ function ProfilePage() {
 
   return (
     <>
-      <div className="flex justify-end">
-        <Link
-          to="/edit-profile"
-          className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
-        >
-          Edit Details
-        </Link>
-      </div>
+      {isCurrentUserProfile && (
+        <div className="flex justify-end">
+          <Link
+            to="/edit-profile"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Edit Details
+          </Link>
+        </div>
+      )}
       <div className="flex justify-center py-8">
         <div className="w-full max-w-4xl flex mx-auto bg-white shadow-md rounded-lg overflow-hidden">
           {/* User Image */}
@@ -71,7 +78,7 @@ function ProfilePage() {
             {/* Render filteredUserData */}
             {Object.entries(filteredUserData).map(([key, value], index) => (
               <div key={index} className="mb-4">
-                <div className="block text-gray-700 capitalize text-sm font-bold mb-2">
+                <div className="block text-gray-700 text-sm font-bold mb-2">
                   {key}
                   <p className="text-gray-800 font-medium">{value}</p>
                 </div>
@@ -85,9 +92,9 @@ function ProfilePage() {
                     {key}
                     {/* Displaying date part only */}
                     <p className="text-gray-800 font-medium">
-                      {key === "dob"
+                      {key === "dob" && dobDate
                         ? dobDate.toLocaleDateString()
-                        : key === "startDate"
+                        : key === "startDate" && startDateDate
                         ? startDateDate.toLocaleDateString()
                         : value}
                     </p>

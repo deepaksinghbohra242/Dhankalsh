@@ -11,5 +11,6 @@ import java.util.Optional;
         boolean existsByCommunityName(String communityName);
         boolean existsByEmail(String email);
         List<User> findByCommunityName(String communityName);
+        Integer countByCommunityName(String communityName);
 
     }

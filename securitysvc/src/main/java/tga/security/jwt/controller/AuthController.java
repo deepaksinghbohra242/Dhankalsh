@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/v1/auth")
 public record AuthController(AuthenticationService authenticationService) {
 
-
     @PostMapping("/register/addnew")
     public ResponseEntity<MemberResponse> register(@RequestBody MemberRequest request) {
         return ResponseEntity.ok(authenticationService.register(request));
@@ -37,6 +36,13 @@ public record AuthController(AuthenticationService authenticationService) {
     @GetMapping("/{userId}")
     public ResponseEntity<RegisterResponse> getUserByUserId(@PathVariable("userId") Integer userId){
         return ResponseEntity.ok(authenticationService.getUserByUserId(userId));
+    }
+
+    @GetMapping("/totalmember")
+    public ResponseEntity<Integer> getTotalContribution(
+            @RequestParam("community") String communityName) {
+        Integer totalContribution = authenticationService.getTotalMember(communityName);
+        return ResponseEntity.ok(totalContribution);
     }
 
 }

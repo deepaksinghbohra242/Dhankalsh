@@ -14,6 +14,7 @@ import Member from "./components/main/member/Member";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import EditProfile from "./components/main/profile/EditProfile";
 import Home from "./components/main/home/Home";
+import UserProfile from "./components/main/profile/UserProfile";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/payment" element={<ProtectedRoute><Payment /></ProtectedRoute>}/>
           <Route path="/notification" element={<ProtectedRoute><Notification /></ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
+          <Route path="/profile/:id" element={<ProtectedRoute><UserProfile /></ProtectedRoute>}/>
           <Route path="/addnew" element={<ProtectedRoute><Member /></ProtectedRoute>}/>
           <Route path="/edit-profile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>}/>
         </Routes>

@@ -9,9 +9,7 @@ function Dropdown() {
   const [redirect, setRedirect] = useState(false); 
 
   const menuItems = [
-    { label: "Change Password", value: "/changepassword" },
-    { label: "KYC", value: "/kyc" },
-    { label: "Profile", value: "/profile" },
+    { label: "Profile", value: `/profile` },
     { label: "Log Out", value: "/logout" }
   ];
 

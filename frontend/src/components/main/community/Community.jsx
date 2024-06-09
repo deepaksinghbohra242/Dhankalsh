@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchTotalContribution, fetchTotalUser } from '../../../redux/slices/userSlices';
 
 function Community() {
-  const communityName = "Community Name"
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state?.user?.userAuth);
+  const communityName = user?.communityName;
+  
+  // Local state for total contribution
+  const [totalContribution, setTotalContribution] = useState(null);
+  const [totalMember , setTotalMember] = useState(null);
+
+  useEffect(() => {
+    if (communityName) {
+      // Dispatch the action and handle the result
+      dispatch(fetchTotalContribution(communityName)).then((response) => {
+        setTotalContribution(response.payload); // Assuming the payload contains the total contribution
+      });
+      dispatch(fetchTotalUser(communityName)).then((response)=>{
+        setTotalMember(response.payload);
+      })
+    }
+    
+  }, [dispatch, communityName]);
+
   const communityData = [
-    { name: "Community ID", value: "R9Y32432148" },
-    { name: "Available Amount", value: 10000 },
+    { name: "Community ID", value: user?.id },
+    { name: "Available Amount", value: totalContribution },
     { name: "Loan Given", value: 3000 },
-    { name: "Total Members", value: 50 },
+    { name: "Total Members", value: totalMember },
   ];
+
+  if (totalContribution === null) {
+    return <div>Loading...</div>; // Loading state
+  }
 
   return (
     <div className="container mx-auto py-8">
@@ -16,10 +42,7 @@ function Community() {
         <div className="grid grid-cols-1 gap-4 w-full">
           <div className="grid grid-cols-4 gap-4">
             {communityData.map((item, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-md rounded-lg overflow-hidden"
-              >
+              <div key={index} className="bg-white shadow-md rounded-lg overflow-hidden">
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{item.name}</div>
                   <p className="text-gray-700 text-base">{item.value}</p>

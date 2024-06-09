@@ -98,4 +98,8 @@ public record AuthenticationService(UserRepository userRepository,
             throw new IllegalArgumentException("User not found with userId: " + userId);
         }
     }
+
+    public Integer getTotalMember(String communityName){
+        return (Integer) userRepository.countByCommunityName(communityName);
+    }
 }

@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {baseUrl} from "../../utils/BaseUrl";
+import {baseUrl , contributionUrl} from "../../utils/BaseUrl";
 
 const resetUserAction = createAction("user/reset");
 
@@ -104,6 +104,30 @@ export const fetchUserAction = createAsyncThunk(
     }
 );
 
+export const fetchTotalUser = createAsyncThunk(
+    "user/totalmember",
+    async (communityName , {rejectWithValue , getState}) =>{
+        try {
+            const {data} = await axios.get(`${baseUrl}/totalmember?community=${communityName}`);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error?.response?.data || error.message);
+        }
+    }
+)
+
+export const fetchTotalContribution = createAsyncThunk(
+    "user/totalcontibution",
+    async ( communityName, {rejectWithValue , getState}) =>{
+        try {
+            const {data} = await axios.get(`${contributionUrl}/totalcontribution?community=${communityName}`);
+            return data ;
+        } catch (error) {
+            return rejectWithValue(error?.response?.data || error.message);
+        }
+    }
+)
+
 export const logoutUserAction = createAsyncThunk(
     "user/logout",
     async (_, { rejectWithValue }) => {
@@ -182,6 +206,19 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             });
+
+            builder.addCase(fetchTotalContribution.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+                .addCase(fetchTotalContribution.fulfilled, (state, action) => {
+                    state.loading = false;
+                    state.usersData = action.payload;
+                })
+                .addCase(fetchTotalContribution.rejected, (state, action) => {
+                    state.loading = false;
+                    state.error = action.payload;
+                });
 
         builder
             .addCase(logoutUserAction.pending, (state, action) => {

@@ -77,4 +77,11 @@ public record ContributionController(ContributionService contributionService) {
         List<ContributionResponse> contributions = contributionService.getAllContributions(year, communityName);
         return ResponseEntity.ok(contributions);
     }
+
+    @GetMapping("/totalcontribution")
+    public ResponseEntity<Integer> getTotalContribution(
+            @RequestParam("community") String communityName) {
+        Integer totalContribution = contributionService.getTotalContribution(communityName);
+        return ResponseEntity.ok(totalContribution);
+    }
 }
