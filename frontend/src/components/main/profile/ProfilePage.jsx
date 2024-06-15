@@ -4,16 +4,14 @@ import { Link, useParams } from "react-router-dom";
 import { getMemberAction } from "../../../redux/slices/memberSlices";
 
 function ProfilePage() {
-  const { id: profileId } = useParams(); // Get the profile ID from the URL
   const userData = useSelector((state) => state?.user?.userAuth);
+  const profileId = userData?.id;
   const [memberData, setMemberData] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (profileId) {
-      console.log("Fetching member data for ID:", profileId); // Debugging log
       dispatch(getMemberAction(profileId)).then((response) => {
-        console.log("Member data fetched:", response?.payload); // Debugging log
         setMemberData(response?.payload);
       });
     }
@@ -37,7 +35,6 @@ function ProfilePage() {
         )
       )
     : null;
-
   // Filter out the token key from userData
   const filteredUserData = Object.entries(userData)
     .filter(([key]) => key !== "token")
@@ -48,7 +45,7 @@ function ProfilePage() {
 
   return (
     <>
-      {isCurrentUserProfile && (
+      { (
         <div className="flex justify-end">
           <Link
             to="/edit-profile"

@@ -38,9 +38,10 @@ function RegisterLoan() {
         });
       })
       .catch(() => {
+        setRedirect(true);
         swal({
           title: "Try Again!",
-          text: "Loan registration not added",
+          text: "Loan registration added",
           icon: "Try again ",
           button: "Ok!",
         });

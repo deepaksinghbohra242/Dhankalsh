@@ -42,7 +42,7 @@ function CreateCommunity() {
         });
       });
   };
-  if (redirect) return <Navigate to={"/loan"} />;
+  if (redirect) return <Navigate to={"/community"} />;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
