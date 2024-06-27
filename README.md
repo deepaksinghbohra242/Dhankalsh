@@ -1,6 +1,3 @@
-Certainly! Here’s a comprehensive README for your Spring Boot and React-based microservice project:
-
----
 
 # Dhankalash : A community based loan system
 
@@ -23,8 +20,7 @@ This project consists of a collection of Spring Boot microservices and a front-e
 6. [Running the Frontend](#running-the-frontend)
 7. [API Documentation](#api-documentation)
 8. [Development Workflow](#development-workflow)
-9. [Contributing](#contributing)
-10. [License](#license)
+
 
 ## Project Structure
 
